@@ -6,6 +6,7 @@ import logging
 import os.path
 import sys
 
+
 from pkg_resources import get_distribution
 
 from multilog.receivers import DEFAULT_HOST, DEFAULT_PORT, LogReceiver
@@ -19,7 +20,7 @@ def setup_logging(config_path):
 
     """
     if not os.path.exists(config_path):
-        raise IOError("Configuration file '{0}' not found. Create it, or pass it in with the '-c' switch.".format(
+        raise IOError("configuration file '{0}' not found. Create it, or pass it in with the '-c' switch.".format(
             config_path))
     logging.config.fileConfig(config_path, defaults={"root_handler": "multilogServerHandler"})
 
