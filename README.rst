@@ -157,6 +157,39 @@ Then, in your application, pass the root handler name into the logging config:
 
 Multilog will always load the ``multilogServerHandler`` handler.  If you don't want to run Multilog (if you're running a single-threaded local dev server, for example), simply change your ``root_handler`` value to ``multilogServerHandler`` to write to the handler.
 
+
+Docker
+------
+Build a container with
+
+.. code-block:: bash
+
+    $ docker build -t multilog . # If you are directly building this repository.
+
+Run this container with (Note: use absolute paths for everything, or Docker will misinterpret you!)
+
+.. code-block:: bash
+
+    $ docker run -d -p 9020:9020 -v /location/of/server/logging.ini/file/:/logconf -v /where/log/files/end/up:/var/log/appName multilog
+
+Make sure to mount the whole directory. If you mount a single file, then Docker will not be cognizant of changes to that one file.
+
+Now, to connect to the logger, here is some sample application code:
+
+.. code-block:: python
+
+    import logging, logging.handlers, logging.config
+    # clientlogger.ini is taken from the above snippet.
+    logging.config.fileConfig("clientlogger.ini", defaults={"root_handler": "multilogClientHandler"})
+    socketHandler = logging.handlers.SocketHandler('localhost', 9020)
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.DEBUG)
+
+    logger.addHandler(socketHandler)
+
+    logger.info("Made a log call!")
+
+
 Support
 -------
 

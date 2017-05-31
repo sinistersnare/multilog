@@ -15,11 +15,11 @@ __version__ = get_distribution('multilog').version # pylint: disable=no-member,m
 
 def setup_logging(config_path):
     """Initialize the logger
-
     :param config_path: The path to the config file
 
     """
-    if not os.path.exists(config_path):
+    # TODO: fail noisily (but cleanly) if /logconf/logging.ini is the default (empty) one.
+    if not os.path.exists(config_path) or os.path.getsize(config_path) == 0:
         raise IOError("configuration file '{0}' not found. Create it, or pass it in with the '-c' switch.".format(
             config_path))
     logging.config.fileConfig(config_path, defaults={"root_handler": "multilogServerHandler"})
