@@ -10,12 +10,15 @@ if IS_PYTHON2:
 else:
     from unittest.mock import patch
 
+@patch("os.path.getsize")
 @patch("os.path.exists")
 @patch("logging.config.fileConfig")
-def test_setup_logging(file_config, path_exists):
+def test_setup_logging(file_config, path_exists, path_getsize):
     path_exists.return_value = True
+    path_getsize.return_value = 1 # anything > 0
     cli.setup_logging("/path/to/config")
     path_exists.assert_called_with("/path/to/config")
+    path_getsize.assert_called_with("/path/to/config")
     file_config.assert_called_with("/path/to/config", defaults={"root_handler": "multilogServerHandler"})
 
 @raises(IOError)

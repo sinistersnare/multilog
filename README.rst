@@ -172,23 +172,9 @@ Run this container with (Note: use absolute paths for everything, or Docker will
 
     $ docker run -d -p 9020:9020 -v /location/of/server/logging.ini/file/:/logconf -v /where/log/files/end/up:/var/log/appName multilog
 
-Make sure to mount the whole directory. If you mount a single file, then Docker will not be cognizant of changes to that one file.
+**Make sure to mount the whole directory.** If you mount a single file, then Docker will not be cognizant of changes to that one file.
 
-Now, to connect to the logger, here is some sample application code:
-
-.. code-block:: python
-
-    import logging, logging.handlers, logging.config
-    # clientlogger.ini is taken from the above snippet.
-    logging.config.fileConfig("clientlogger.ini", defaults={"root_handler": "multilogClientHandler"})
-    socketHandler = logging.handlers.SocketHandler('localhost', 9020)
-    logger = logging.getLogger(__name__)
-    logger.setLevel(logging.DEBUG)
-
-    logger.addHandler(socketHandler)
-
-    logger.info("Made a log call!")
-
+Connect to the logger as if with any SocketHandler, using a logging config as exemplified above.
 
 Support
 -------
